@@ -1,6 +1,7 @@
 ﻿using Businnes.Abstract;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,19 +21,35 @@ namespace Businnes.Concrete
         {
             if (car.Description.Length > 2 && car.DailyPrice > 0)
             {
-                Console.WriteLine("Adding Successful...");
+                Console.WriteLine("Being Added ... ");               
                 _carDal.Add(car);
+                Console.WriteLine("Adding Successful...");
             }
             else
             {
-                Console.WriteLine("Araba ismi minimum 2 karakter ve günlük fiyatı 0'dan büyük olmalıdır. ");
+                Console.WriteLine("The car name must be a minimum of 2 characters and the daily price must be greater than 0.");
             }
+        }
+
+        public void Delete(Car car)
+        {
+            Console.WriteLine("Wiping Out ...");
+            _carDal.Delete(car);
+            Console.WriteLine(car.Description + " Deleted Successful!");
         }
 
         public List<Car> GetAll()
         {
+            Console.WriteLine("Listing ...");
             Console.WriteLine("Listing Successful...");
             return _carDal.GetAll();  
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            Console.WriteLine("Listing ...");
+            Console.WriteLine("Brand / Model / Color by Listing Successful...");
+            return _carDal.GetCarDetails();
         }
 
         public List<Car> GetCarsByBrandId(int brandId)
@@ -47,6 +64,13 @@ namespace Businnes.Concrete
             Console.WriteLine("Listing by Color Successful...");
             var GetCar = _carDal.GetAll(c => c.ColorId == colorId).ToList();
             return GetCar;
+        }
+
+        public void Update(Car car)
+        {
+            Console.WriteLine("Updating ...");
+            _carDal.Update(car);
+            Console.WriteLine(car.Description + " Updated Successful!");
         }
     }
 }
