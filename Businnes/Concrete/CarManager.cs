@@ -1,4 +1,6 @@
 ﻿using Businnes.Abstract;
+using Businnes.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -17,60 +19,76 @@ namespace Businnes.Concrete
             _carDal = carDal;
         }
 
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
-            if (car.Description.Length > 2 && car.DailyPrice > 0)
+            if (car.DailyPrice < 0)
             {
-                Console.WriteLine("Being Added ... ");               
-                _carDal.Add(car);
-                Console.WriteLine("Adding Successful...");
+                return new ErrorResult(Messages.DailyPriceInvalid);
+            }
+            else if (car.Description.Length < 2)
+            {
+                return new ErrorResult(Messages.CarNameInvalid);
             }
             else
             {
-                Console.WriteLine("The car name must be a minimum of 2 characters and the daily price must be greater than 0.");
+                _carDal.Add(car);
+                return new SuccessResult(Messages.CarAdded);
             }
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
-            Console.WriteLine("Wiping Out ...");
             _carDal.Delete(car);
-            Console.WriteLine(car.Description + " Deleted Successful!");
+            return new SuccessResult(Messages.CarDeleted);
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            Console.WriteLine("Listing ...");
-            Console.WriteLine("Listing Successful...");
-            return _carDal.GetAll();  
+            if (DateTime.Now.Hour==00)
+            {
+                return new ErrorDataResult<List<Car>>(Messages.MaintenanceTime);
+            }
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(),Messages.CarsListed);  
         }
 
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<Car>> GetAllById(int id)
         {
-            Console.WriteLine("Listing ...");
-            Console.WriteLine("Brand / Model / Color by Listing Successful...");
-            return _carDal.GetCarDetails();
+            throw new NotImplementedException();
         }
 
-        public List<Car> GetCarsByBrandId(int brandId)
+        public IDataResult<List<Car>> GetByDailyPrice(decimal min, decimal max)
         {
-            Console.WriteLine("Listing by Brand Successful...");
-            var GetCarId = _carDal.GetAll(p => p.BrandId == brandId).ToList();
-            return GetCarId;
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.DailyPrice >= min && c.DailyPrice <= max));
         }
 
-        public List<Car> GetCarsByColorId(int colorId)
+        public IDataResult<Car> GetById(int id)
         {
-            Console.WriteLine("Listing by Color Successful...");
-            var GetCar = _carDal.GetAll(c => c.ColorId == colorId).ToList();
-            return GetCar;
+            throw new NotImplementedException();
         }
 
-        public void Update(Car car)
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            Console.WriteLine("Updating ...");
+            if (DateTime.Now.Hour == 00)
+            {
+                return new ErrorDataResult<List<CarDetailDto>>(Messages.MaintenanceTime);
+            }
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
+        }
+
+        public IDataResult<List<Car>> GetCarsByBrandId(int brandId)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(p => p.BrandId == brandId));
+        }
+
+        public IDataResult<List<Car>> GetCarsByColorId(int colorId)
+        {
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.ColorId == colorId));
+        }
+
+        public IResult Update(Car car)
+        {
             _carDal.Update(car);
-            Console.WriteLine(car.Description + " Updated Successful!");
+            return new SuccessResult(Messages.CarUptaded);
         }
     }
 }

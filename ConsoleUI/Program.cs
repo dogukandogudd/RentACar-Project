@@ -9,27 +9,38 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-
             //ListCar();
             //EfBranIdTest();
             //EfColorIdTest();
 
-            //---------------
-
             //ListBrand();
 
+            //---------------
+            //Color & Brand Manager will be held !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //---------------
 
             //ListColor(); 
 
 
+            TestCarDetail();
+
+        }
+
+        private static void TestCarDetail()
+        {
             CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var car in carManager.GetCarDetails())
+            var result = carManager.GetCarDetails();
+            if (result.Success)
             {
-
-                Console.WriteLine(car.BrandName + " / " + car.Description + " / " + car.ColorName );
+                foreach (var car in result.Data)
+                {
+                    Console.WriteLine(car.BrandName + " / " + car.Description + " / " + car.ColorName);
+                }
             }
-
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
         }
 
         private static void ListColor()
@@ -53,9 +64,9 @@ namespace ConsoleUI
         private static void EfColorIdTest()
         {
             CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var brand in carManager.GetCarsByColorId(3))
+            foreach (var brand in carManager.GetCarsByColorId(3).Data)
             {
-                Console.WriteLine("Rengi #" + brand.ColorId + " Gri olanlar listelendi.");
+                Console.WriteLine("Rengi #" + brand.ColorId + " olanlar listelendi.");
                 Console.WriteLine(brand.Description);
             }
         }
@@ -63,7 +74,7 @@ namespace ConsoleUI
         private static void EfBranIdTest()
         {
             CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var brand in carManager.GetCarsByBrandId(1))
+            foreach (var brand in carManager.GetCarsByBrandId(1).Data)
             {
                 Console.WriteLine("Markası #" + brand.BrandId + " olanlar listelendi.");
                 Console.WriteLine(brand.Description);
@@ -73,7 +84,7 @@ namespace ConsoleUI
         private static void ListCar()
         {
             CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var car in carManager.GetAll())
+            foreach (var car in carManager.GetAll().Data)
             {
                 Console.WriteLine(car.Description + "(" + car.ModelYear + ")" + " Günlük Fiyat: " + car.DailyPrice + " TL");
             }
