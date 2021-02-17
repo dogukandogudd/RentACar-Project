@@ -1,4 +1,6 @@
 ﻿using Businnes.Abstract;
+using Businnes.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -15,38 +17,32 @@ namespace Businnes.Concrete
         {
             _colorDal = colorDal;
         }
-        public void Add(Color color)
+        public IResult Add(Color color)
         {
-            Console.WriteLine("Being Added ... ");
             _colorDal.Add(color);
-            Console.WriteLine(color.ColorName+" Adding Successful...");
+            return new SuccessResult(Messages.ColorAdded);
         }
 
-        public void Delete(Color color)
+        public IResult Delete(Color color)
         {
-            Console.WriteLine("Wiping Out ...");
             _colorDal.Delete(color);
-            Console.WriteLine(color.ColorName + " Deleted Successful!");
+            return new SuccessResult(Messages.ColorDeleted);
         }
 
-        public List<Color> GetAll()
+        public IDataResult<List<Color>> GetAll()
         {
-            Console.WriteLine("Listing ...");
-            Console.WriteLine("Listing Successful...");
-            return _colorDal.GetAll();
+            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Messages.ColorsListed);
         }
 
-        public Color GetByColorId(int colorId)
+        public IDataResult<Color> GetByColorId(int colorId)
         {
-            Console.WriteLine("Listing by Color Successful...");
-            return _colorDal.Get(c => c.ColorId == colorId);
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.ColorId == colorId));
         }
 
-        public void Update(Color color)
+        public IResult Update(Color color)
         {
-            Console.WriteLine("Updating ...");
             _colorDal.Update(color);
-            Console.WriteLine(color.ColorName + " Updated Successful!");
+            return new SuccessResult(Messages.ColorUpdated);
         }
     }
 }

@@ -9,20 +9,14 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
+            TestCarDetail();
+            //programcs baştan düzenlenecek
+            //---------------
             //ListCar();
             //EfBranIdTest();
             //EfColorIdTest();
-
-            //ListBrand();
-
-            //---------------
-            //Color & Brand Manager will be held !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            //---------------
-
             //ListColor(); 
-
-
-            TestCarDetail();
+            //ListBrand();
 
         }
 
@@ -43,52 +37,52 @@ namespace ConsoleUI
             }
         }
 
-        private static void ListColor()
-        {
-            ColorManager colorManager = new ColorManager(new EfColorDal());
-            foreach (var color in colorManager.GetAll())
-            {
-                Console.WriteLine(color.ColorName);
-            }
-        }
+        //private static void ListColor()
+        //{
+        //    ColorManager colorManager = new ColorManager(new EfColorDal());
+        //    foreach (var color in colorManager.GetAll())
+        //    {
+        //        Console.WriteLine(color.ColorName);
+        //    }
+        //}
 
-        private static void ListBrand()
-        {
-            BrandManager brandManager = new BrandManager(new EfBrandDal());
-            foreach (var brand in brandManager.GetAll())
-            {
-                Console.WriteLine(brand.BrandName);
-            }
-        }
+        //private static void ListBrand()
+        //{
+        //    BrandManager brandManager = new BrandManager(new EfBrandDal());
+        //    foreach (var brand in brandManager.GetAll())
+        //    {
+        //        Console.WriteLine(brand.BrandName);
+        //    }
+        //}
 
-        private static void EfColorIdTest()
-        {
-            CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var brand in carManager.GetCarsByColorId(3).Data)
-            {
-                Console.WriteLine("Rengi #" + brand.ColorId + " olanlar listelendi.");
-                Console.WriteLine(brand.Description);
-            }
-        }
+        //private static void EfColorIdTest()
+        //{
+        //    CarManager carManager = new CarManager(new EfCarDal());
+        //    foreach (var brand in carManager.GetCarsByColorId(3).Data)
+        //    {
+        //        Console.WriteLine("Rengi #" + brand.ColorId + " olanlar listelendi.");
+        //        Console.WriteLine(brand.Description);
+        //    }
+        //}
 
-        private static void EfBranIdTest()
-        {
-            CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var brand in carManager.GetCarsByBrandId(1).Data)
-            {
-                Console.WriteLine("Markası #" + brand.BrandId + " olanlar listelendi.");
-                Console.WriteLine(brand.Description);
-            }
-        }
+        //private static void EfBranIdTest()
+        //{
+        //    CarManager carManager = new CarManager(new EfCarDal());
+        //    foreach (var brand in carManager.GetCarsByBrandId(1).Data)
+        //    {
+        //        Console.WriteLine("Markası #" + brand.BrandId + " olanlar listelendi.");
+        //        Console.WriteLine(brand.Description);
+        //    }
+        //}
 
-        private static void ListCar()
-        {
-            CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var car in carManager.GetAll().Data)
-            {
-                Console.WriteLine(car.Description + "(" + car.ModelYear + ")" + " Günlük Fiyat: " + car.DailyPrice + " TL");
-            }
-        }
+        //private static void ListCar()
+        //{
+        //    CarManager carManager = new CarManager(new EfCarDal());
+        //    foreach (var car in carManager.GetAll().Data)
+        //    {
+        //        Console.WriteLine(car.Description + "(" + car.ModelYear + ")" + " Günlük Fiyat: " + car.DailyPrice + " TL");
+        //    }
+        //}
 
     }
 }
