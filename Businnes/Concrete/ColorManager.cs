@@ -1,5 +1,5 @@
-﻿using Businnes.Abstract;
-using Businnes.Constants;
+﻿using Business.Abstract;
+using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Businnes.Concrete
+namespace Business.Concrete
 {
     public class ColorManager : IColorService
     {
@@ -34,9 +34,9 @@ namespace Businnes.Concrete
             return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Messages.ColorsListed);
         }
 
-        public IDataResult<Color> GetByColorId(int colorId)
+        public IDataResult<Color> GetByColorId(int id)
         {
-            return new SuccessDataResult<Color>(_colorDal.Get(c => c.ColorId == colorId));
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == id));
         }
 
         public IResult Update(Color color)
