@@ -7,10 +7,10 @@ using System.Text;
 
 namespace Business.Abstract
 {
-     interface IBrandService
+     public interface IBrandService
     {
         IDataResult<List<Brand>> GetAll();
-        IDataResult<Brand> GetByBrandId(int brandId);
+        IDataResult<Brand> GetById(int brandId);
         IResult Add(Brand brand);
         IResult Update(Brand brand);
         IResult Delete(Brand brand);
