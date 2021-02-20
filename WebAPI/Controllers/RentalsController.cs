@@ -23,35 +23,35 @@ namespace WebAPI.Controllers
         {
             var result = _rentalService.GetAll();
             if (result.Success) { return Ok(result); }
-            return BadRequest();
+            return BadRequest(result);
         }
         [HttpGet("getbyid")]
         public IActionResult GetById(int id)
         {
             var result = _rentalService.GetById(id);
             if (result.Success) { return Ok(result); }
-            return BadRequest();
+            return BadRequest(result);
         }
         [HttpPost("add")]
         public IActionResult Add(Rental rental)
         {
             var result = _rentalService.Add(rental);
             if (result.Success) { return Ok(result); }
-            return BadRequest();
+            return BadRequest(result);
         }
         [HttpPost("delete")]
         public IActionResult Delete(Rental rental)
         {
             var result = _rentalService.Delete(rental);
             if (result.Success) { return Ok(result); }
-            return BadRequest();
+            return BadRequest(result);
         }
         [HttpPost("update")]
         public IActionResult Update(Rental rental)
         {
             var result = _rentalService.Update(rental);
             if (result.Success) { return Ok(result); }
-            return BadRequest();
+            return BadRequest(result);
         }
     }
 }
