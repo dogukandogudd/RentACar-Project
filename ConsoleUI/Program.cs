@@ -1,7 +1,7 @@
 ﻿using Business.Concrete;
-using Core.Utilities.Results;
-using DataAccess.Concrete.EntityFramework;
-using DataAccess.Concrete.InMemory;
+using DataAccess.Concrete.Entity_Framework;
+//using DataAccess.Concrete.InMemory;
+using Core.Entities.Concrete;
 using Entities.Concrete;
 using System;
 
@@ -11,98 +11,111 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
+            CarManager carManager = new CarManager(new EFCarDAL());
+            BrandManager brandManager = new BrandManager(new EFBrandDAL());
+            ColorManager colorManager = new ColorManager(new EFColorDAL());
+            CustomerManager customerManager = new CustomerManager(new EFCustomerDAL());
+            UserManager userManager = new UserManager(new EFUserDAL());
+            RentalManager rentalManager = new RentalManager(new EFRentalDAL());
 
-            //TestCarDetail();
+            // AddCar(carManager);
 
+            // GetDailyPrice(carManager);
 
-            //RentalManager rentalManager = new RentalManager(new EfRentalDal());
-            //Rental rental = new Rental
-            //{
-            //    //Id = 3,
-            //    CarId = 4,
-            //    CustomerId = 3,
-            //    RentDate = DateTime.Now,
-            //    ReturnDate = null
-            //};
-            //IResult result = rentalManager.Add(rental);
-            //if (!result.Success) Console.WriteLine(result.Message);
-            ////rentalManager.Update(rental);
-            ////rentalManager.Delete(rental);
-            //rentalManager.GetAll().Data.ForEach(r => Console.WriteLine(r.CarId + " " + r.RentDate));
+            // GetColors(colorManager);
 
-            //programcs baştan düzenlenecek
-            //---------------
-            //ListCar();
-            //EfBranIdTest();
-            //EfColorIdTest();
-            //ListColor(); 
-            ListBrand();
+            // GetUserEmail(userManager);
 
+            // AddUserManuel(userManager);
+
+            // TakeInfoAndAddUser(userManager);
+
+            Car car = new Car
+            {
+                BrandId = 2,
+                ColorId = 3,
+                DailyPrice = 200,
+                Description = "New Model",
+                ModelYear = 2021,
+            };
+
+            carManager.Delete(car);
         }
 
-        private static void TestCarDetail()
-        {
-            CarManager carManager = new CarManager(new EfCarDal());
-            var result = carManager.GetCarDetails();
-            if (result.Success)
-            {
-                foreach (var car in result.Data)
-                {
-                    Console.WriteLine(car.BrandName + " / " + car.Description + " / " + car.ColorName);
-                }
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
-        }
-
-        //private static void ListColor()
+        //private static void TakeInfoAndAddUser(UserManager userManager)
         //{
-        //    ColorManager colorManager = new ColorManager(new EfColorDal());
-        //    foreach (var color in colorManager.GetAll())
+        //    Console.Write("FirstName: ");
+        //    string FirstName = Console.ReadLine();
+
+        //    Console.Write("LastName: ");
+        //    string Lastname = Console.ReadLine();
+
+        //    Console.Write("Email: ");
+        //    string Email = Console.ReadLine();
+
+        //    Console.Write("Password: ");
+        //    string Password = Console.ReadLine();
+
+        //    User user = new User
         //    {
-        //        Console.WriteLine(color.ColorName);
+        //        FirstName = FirstName,
+        //        LastName = Lastname,
+        //        Email = Email,
+
+        //    };
+        //    userManager.Add(user);
+        //}
+
+        //private static void AddUserManuel(UserManager userManager)
+        //{
+        //    User user = new User
+        //    {
+        //        Email = "aybikesusuz@gmail.com",
+        //        FirstName = "Aybike",
+        //        LastName = "Susuz",
+        //        Password = "aybike123"
+        //    };
+
+        //    userManager.Add(user);
+        //}
+
+        //private static void GetUserEmail(UserManager userManager)
+        //{
+        //    foreach (User user in userManager.GetUsers().Data)
+        //    {
+        //        Console.WriteLine(user.Email);
         //    }
         //}
 
-        private static void ListBrand()
-        {
-            BrandManager brandManager = new BrandManager(new EfBrandDal());
-            foreach (var brand in brandManager.GetAll().Data)
-            {
-                Console.WriteLine(brand.Name);
-            }
-        }
-
-        //private static void EfColorIdTest()
+        //private static void GetColors(ColorManager colorManager)
         //{
-        //    CarManager carManager = new CarManager(new EfCarDal());
-        //    foreach (var brand in carManager.GetCarsByColorId(3).Data)
+        //    foreach (Color color in colorManager.GetColors().Data)
         //    {
-        //        Console.WriteLine("Rengi #" + brand.ColorId + " olanlar listelendi.");
-        //        Console.WriteLine(brand.Description);
+        //        Console.WriteLine(color.Name);
+
         //    }
         //}
 
-        //private static void EfBranIdTest()
+        //private static void AddCar(CarManager carManager)
         //{
-        //    CarManager carManager = new CarManager(new EfCarDal());
-        //    foreach (var brand in carManager.GetCarsByBrandId(1).Data)
+        //    Car car = new Car
         //    {
-        //        Console.WriteLine("Markası #" + brand.BrandId + " olanlar listelendi.");
-        //        Console.WriteLine(brand.Description);
-        //    }
+        //        BrandId = 2,
+        //        ColorId = 3,
+        //        DailyPrice = 200,
+        //        Description = "New Model",
+        //        ModelYear = 2021,
+        //    };
+        //    carManager.Add(car);
         //}
 
-        private static void ListCar()
-        {
-            CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var car in carManager.GetAll().Data)
-            {
-                Console.WriteLine(car.Name + "(" + car.ModelYear + ") " + car.Description +" "+ " Günlük Fiyat: " + car.DailyPrice + " TL");
-            }
-        }
+        //private static void GetDailyPrice(CarManager carManager)
+        //{
+        //    foreach (var car in carManager.GetByDailyPrice(750, 1000).Data)
+        //    {
+        //        Console.WriteLine(car.Description);
+        //    }
+        //}
 
     }
 }

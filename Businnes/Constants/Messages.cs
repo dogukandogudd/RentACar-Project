@@ -1,6 +1,6 @@
-﻿using Entities.Concrete;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Business.Constants
@@ -53,6 +53,21 @@ namespace Business.Constants
 
         //MaintenanceMessages
         public static string MaintenanceTime= "System is in Maintenance";
+
+        //ImageMessages
+        public static string ImagesAdded = "resim eklendi";
+        public static string CarImageLimitExceeded = "Resim limitine erişildi!";
+        public static string AuthorizationDenied = "AuthorizationDenied";
+
+        //
+
+
+        public static string UserNotFound = "User not found";
+        public static string PasswordError = "PasswordError";
+        public static string SuccessfullLogin = "SuccessfullLogin";
+        public static string UserAlreadyExists = "UserAlreadyExists";
+        public static string UserRegistered = "SuccessUserRegistered";
+        public static string AccessTokenCreated = "Access token created";
 
     }
 }

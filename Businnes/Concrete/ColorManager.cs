@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
-using Business.Constants;
-using Core.Utilities.Results;
+using Business.BusinessAspect.Autofac;
+using Core.Aspects.Autofac.Caching;
+using Core.Utilities.Results.Abstract;
+using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using System;
@@ -11,38 +13,47 @@ namespace Business.Concrete
 {
     public class ColorManager : IColorService
     {
-        IColorDal _colorDal;
-
-        public ColorManager(IColorDal colorDal)
+        IColorDAL _colorDAL;
+        public ColorManager(IColorDAL colorDAL)
         {
-            _colorDal = colorDal;
+            _colorDAL = colorDAL;
         }
+
+        [CacheRemoveAspect("IColorService.Get")]
+        [SecuredOperation("color.add,admin")]
         public IResult Add(Color color)
         {
-            _colorDal.Add(color);
-            return new SuccessResult(Messages.ColorAdded);
+            _colorDAL.Add(color);
+            return new SuccessResult();
         }
 
+        [CacheRemoveAspect("IColorService.Get")]
+        [SecuredOperation("color.delete,admin")]
         public IResult Delete(Color color)
         {
-            _colorDal.Delete(color);
-            return new SuccessResult(Messages.ColorDeleted);
+            _colorDAL.Delete(color);
+            return new SuccessResult();
         }
 
-        public IDataResult<List<Color>> GetAll()
-        {
-            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Messages.ColorsListed);
-        }
-
-        public IDataResult<Color> GetById(int id)
-        {
-            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == id));
-        }
-
+        [CacheRemoveAspect("IColorService.Get")]
+        [SecuredOperation("color.update,admin")]
         public IResult Update(Color color)
         {
-            _colorDal.Update(color);
-            return new SuccessResult(Messages.ColorUpdated);
+            _colorDAL.Update(color);
+            return new SuccessResult();
         }
+
+        [CacheAspect]
+        public IDataResult<List<Color>> GetColors()
+        {
+            return new SuccessDataResult<List<Color>>(_colorDAL.GetAll());
+        }
+
+        [CacheAspect]
+        public IDataResult<Color> GetById(int id)
+        {
+            return new SuccessDataResult<Color>(_colorDAL.Get(c => c.Id == id));
+        }
+
     }
 }

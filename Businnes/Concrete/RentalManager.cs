@@ -1,84 +1,71 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspect.Autofac;
 using Business.Constants;
-using Core.Utilities.Results;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Results.Abstract;
+using Core.Utilities.Results.Concrete;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace Business.Concrete
 {
     public class RentalManager : IRentalService
     {
-
-        IRentalDal _rentalDal;
-
-        public RentalManager(IRentalDal rentalDal)
+        IRentalDAL _rentalDAL;
+        public RentalManager(IRentalDAL rentalDAL)
         {
-            _rentalDal = rentalDal;
+            _rentalDAL = rentalDAL;
         }
+
+        [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("rental.add,admin")]
+        [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
         {
-            var result = CheckReturnDate(rental.CarId);
-            if (!result.Success)
-            {
-                return new ErrorResult(result.Message);
-            }
-            _rentalDal.Add(rental);
-            return new SuccessResult(result.Message);
+            _rentalDAL.Add(rental);
+            return new SuccessResult();
         }
 
-        public IResult CheckReturnDate(int carId)
-        {
-            var result = _rentalDal.GetRentalDetails(x => x.CarId == carId && x.ReturnDate == null);
-            if (result.Count > 0)
-            {
-                return new ErrorResult(Messages.RentalAddedError);
-            }
-            return new SuccessResult(Messages.RentalAdded);
-        }
-
+        [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("rental.delete,admin")]
         public IResult Delete(Rental rental)
         {
-            _rentalDal.Delete(rental);
-            return new SuccessResult(Messages.RentalDeleted);
+            _rentalDAL.Delete(rental);
+            return new SuccessResult();
         }
 
-        public IDataResult<List<Rental>> GetAll()
-        {
-            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
-        }
-
-        public IDataResult<Rental> GetById(int id)
-        {
-            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
-        }
-
-        public IDataResult<List<RentalDetailDto>> GetRentalDetailsDto(int carId)
-        {
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDal.GetRentalDetails(x => x.CarId == carId));
-        }
-
+        [CacheRemoveAspect("IRentalService.Get")]
+        [SecuredOperation("rental.update,admin")]
+        [ValidationAspect(typeof(RentalValidator))]
         public IResult Update(Rental rental)
         {
-            _rentalDal.Update(rental);
-            return new SuccessResult(Messages.RentalUpdated);
+            _rentalDAL.Update(rental);
+            return new SuccessResult();
         }
 
-        public IResult UpdateReturnDate(int carId)
+        [CacheAspect]
+        public IDataResult<List<Rental>> GetRentals()
         {
-            var result = _rentalDal.GetAll(x => x.CarId == carId);
-            var updatedRental = result.LastOrDefault();
-            if (updatedRental.ReturnDate != null)
-            {
-                return new ErrorResult(Messages.RentalUpdatedReturnDateError);
-            }
-            updatedRental.ReturnDate = DateTime.Now;
-            _rentalDal.Update(updatedRental);
-            return new SuccessResult(Messages.RentalUpdatedReturnDate);
+            return new SuccessDataResult<List<Rental>>(_rentalDAL.GetAll());
+        }
+
+        [CacheAspect]
+        public IDataResult<Rental> GetById(int id)
+        {
+            return new SuccessDataResult<Rental>(_rentalDAL.Get(r => r.Id == id));
+        }
+
+        [CacheAspect]
+        public IDataResult<List<RentalDetailDto>> GetRentalDetails()
+        {
+            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDAL.GetRentalDetails());
         }
     }
 }

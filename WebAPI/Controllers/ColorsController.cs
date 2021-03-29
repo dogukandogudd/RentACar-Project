@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Business.Abstract;
+﻿using Business.Abstract;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
@@ -14,44 +15,67 @@ namespace WebAPI.Controllers
     public class ColorsController : ControllerBase
     {
         IColorService _colorService;
-        public ColorsController(IColorService olorService)
+        public ColorsController(IColorService colorService)
         {
-            _colorService = olorService;
+            _colorService = colorService;
         }
-        [HttpGet("getall")]
-        public IActionResult GetAll()
-        {
-            var result = _colorService.GetAll();
-            if (result.Success) { return Ok(result); }
-            return BadRequest(result);
-        }
-        [HttpGet("getbyid")]
-        public IActionResult GetById(int id)
-        {
-            var result = _colorService.GetById(id);
-            if (result.Success) { return Ok(result); }
-            return BadRequest(result);
-        }
+
         [HttpPost("add")]
         public IActionResult Add(Color color)
         {
             var result = _colorService.Add(color);
-            if (result.Success) { return Ok(result); }
-            return BadRequest(result);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
         }
-        [HttpPost("delete")]
+
+        [HttpDelete("delete")]
         public IActionResult Delete(Color color)
         {
             var result = _colorService.Delete(color);
-            if (result.Success) { return Ok(result); }
-            return BadRequest(result);
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
         }
-        [HttpPost("update")]
+
+        [HttpPut("update")]
         public IActionResult Update(Color color)
         {
             var result = _colorService.Update(color);
-            if (result.Success) { return Ok(result); }
+            if (result.Success)
+            {
+                return Ok(result.Message);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getall")]
+        public IActionResult GetAll()
+        {
+            //Thread.Sleep(2000);
+            var result = _colorService.GetColors();
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _colorService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
             return BadRequest(result);
         }
+
+
     }
 }
