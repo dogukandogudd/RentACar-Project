@@ -1,73 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Text;
-
-namespace Business.Constants
+﻿namespace Business.Constants
 {
     public static class Messages
     {
-        //ListedMessage
-        public static string CarsListed = "Cars Listed";
-        public static string BrandsListed = "Brands Listed";
-        public static string ColorsListed = "Colors Listed";
+        public static string MaintenanceTime = "The system is under maintenance.";
 
-        //CarMessages
-        public static string CarAdded = "Car Adding Successful";
-        public static string CarUptaded = "Car Uptaded Successful";
-        public static string CarDeleted = "CarDeleted Successful";
+        public static string CarNameInvalid = "The car name is invalid.";
+        public static string CarsListed = "Cars have listed.";
+        public static string CarAdded = "Car has added.";
+        public static string CarUpdated = "Car has updated.";
+        public static string CarDeleted = "Car has deleted.";
 
-        //ColorMessages
-        public static string ColorAdded = "Renk Eklendi";
-        public static string ColorUpdated = "Renk Güncellendi";
-        public static string ColorDeleted = "Renk Silindi";
-        public static string ColorAddError = "Eklemek istediğiniz renk zaten mevcut.Farklı bir renk giriniz.";
+        public static string UserAdded = "User has added.";
+        public static string UserUpdated = "User has updated.";
+        public static string UserDeleted = "Car has deleted.";
 
-        //BrandMessages
-        public static string BrandAdded = "Marka Eklendi";
-        public static string BrandUpdated = "Marka Güncellendi";
-        public static string BrandDeleted = "Marka Silindi";
-        public static string BrandAddError = "Eklemek istediğiniz marka zaten mevcut.Farklı bir marka giriniz.";
+        public static string CustomerAdded = "Customer has added.";
+        public static string CustomerUpdated = "Customer has updated.";
+        public static string CustomerDeleted = "Customer has deleted.";
 
-        //CustomerMessages
-        public static string CustomerAdded = "Müşteri kayıt işlemi başarılı";
-        public static string CustomerUpdated = "Müşteri güncelleme işlemi başarılı";
-        public static string CustomerDeleted = "Müşteri silme işlemi başarılı";
+        public static string RentalAdded = "Rental has added.";
+        public static string RentalUpdated = "Rental has updated.";
+        public static string RentalDeleted = "Rental has deleted.";
+        public static string RentalUndeliveredCar = "The car has not yet been delivered.";
+        public static string RentalNotAvailable = "Rental is not available between the selected dates.";
 
-        //Rental Messages
-        public static string RentalAdded = "Kiralama işlemi başarılı";
-        public static string RentalAddedError = "Aracın kiraya verilebilmesi için önce teslim edilmesi gerekir.";
-        public static string RentalUpdated = "Kiralama Bilgisi Güncellendi.";
-        public static string RentalDeleted = "Kiralama Bilgisi Silindi.";
-        public static string RentalUpdatedReturnDate = "Araç Teslim Alındı.";
-        public static string RentalUpdatedReturnDateError = "Araç Zaten Teslim Alınmış.";
+        public static string BrandAdded = "Brand has added.";
+        public static string BrandUpdated = "Brand has updated.";
+        public static string BrandDeleted = "Brand has deleted.";
 
-        //UserMessages
-        public static string UserAdded = "Kullanıcı kayıt işlemi başarılı";
-        public static string UserUpdated = "Kullanıcı güncelleme işlemi başarılı";
-        public static string UserDeleted = "Kullanıcı silme işlemi başarılı";
+        public static string ColorAdded = "Color has added.";
+        public static string ColorUpdated = "Color has updated.";
+        public static string ColorDeleted = "Color has deleted.";
 
-        //InvalidMessages
-        public static string CarNameInvalid = "The car name must be a minimum of 2 characters";
-        public static string DailyPriceInvalid = "Daily Price Must Be Greater Than 0";
+        public static string CarImageAdded = "Car image has added.";
+        public static string CarImageUpdated = "Car image has updated.";
+        public static string CarImageDeleted = "Car image has deleted.";
+        public static string CarImageCountOfCarError = "The images of the car are the maximum number.";
 
-        //MaintenanceMessages
-        public static string MaintenanceTime= "System is in Maintenance";
+        public static string AuthorizationDenied = "You are not authorized.";
+        public static string UserRegistered = "The user has registered.";
+        public static string UserNotFound = "User not found.";
+        public static string SuccessfulLogin = "Login successful.";
+        public static string PasswordError = "Bad password.";
+        public static string UserAlreadyExists = "The user already exists.";
+        public static string AccessTokenCreated = "Access token has created.";
 
-        //ImageMessages
-        public static string ImagesAdded = "resim eklendi";
-        public static string CarImageLimitExceeded = "Resim limitine erişildi!";
-        public static string AuthorizationDenied = "AuthorizationDenied";
+        public static string PaymentFailed = "Payment failed.";
+        public static string PaymentSuccessful = "Payment Successful.";
 
-        //
+        public static string UserOperationClaimAdded = "User operation claim has added.";
+        public static string UserOperationClaimUpdated = "User operation claim has updated.";
+        public static string UserOperationClaimDeleted = "User operation claim has deleted.";
 
+        public static string OperationClaimAdded = "Operation claim has added.";
+        public static string OperationClaimUpdated = "Operation claim has updated.";
+        public static string OperationClaimDeleted = "Operation claim has deleted.";
 
-        public static string UserNotFound = "User not found";
-        public static string PasswordError = "PasswordError";
-        public static string SuccessfullLogin = "SuccessfullLogin";
-        public static string UserAlreadyExists = "UserAlreadyExists";
-        public static string UserRegistered = "SuccessUserRegistered";
-        public static string AccessTokenCreated = "Access token created";
+        public static string FindeksAdded = "Findeks point has added.";
+        public static string FindeksUpdated = "Findeks point has updated.";
+        public static string FindeksDeleted = "Findeks point has deleted.";
+        public static string FindeksNotEnoughForCar = "Findeks point is not enough for the car.";
+        public static string FindeksNotFound = "You have to add your findeks score.";
 
+        public static string UserDetailsUpdated = "User details have been updated.";
+
+        public static readonly string creditCardAdded = "Credit card has added.";
+        public static readonly string creditCardDeleted = "Credit card has deleted.";
     }
 }

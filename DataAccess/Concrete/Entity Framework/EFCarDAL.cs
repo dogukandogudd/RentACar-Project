@@ -1,45 +1,35 @@
-﻿using Core.DataAccess.EntityFramework;
-using Core.Utilities.Results.Abstract;
-using DataAccess.Abstract;
-using Entities.Concrete;
-using Entities.DTOs;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using DataAccess.Concrete.Entity_Framework.Context;
+using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
+using Entities.Concrete;
+using Entities.DTOs;
 
-namespace DataAccess.Concrete.Entity_Framework
+namespace DataAccess.Concrete.EntityFramework
 {
-    public class EFCarDAL : EFEntityRepositoryBase<Car, ReCapDbContext>, ICarDAL
+    public class EfCarDal : EfEntityRepositoryBase<Car, ReCapProjectContext>, ICarDal
     {
-        public List<CarDetailDto> GetCarDetails(Expression<Func<Car, bool>> filter = null)
+        public List<CarDetailDto> GetCarDetails(Expression<Func<CarDetailDto, bool>> filter = null)
         {
-            using (ReCapDbContext context = new ReCapDbContext())
+            using (var context = new ReCapProjectContext())
             {
-                var result = from car in filter is null ? context.Cars : context.Cars.Where(filter)
-
-                             join brand in context.Brands
-                             on car.BrandId equals brand.Id
-
-                             join color in context.Colors
-                             on car.ColorId equals color.Id
-
+                var result = from p in context.Cars
+                             join b in context.Brands
+                                 on p.BrandId equals b.Id
+                             join c in context.Colors
+                                 on p.ColorId equals c.Id
                              select new CarDetailDto
                              {
-                                 Id = car.Id,
-                                 BrandId = brand.Id,
-                                 ColorId = color.Id,
-                                 BrandName = brand.Name,
-                                 ColorName = color.Name,
-                                 DailyPrice = car.DailyPrice,
-                                 Description = car.Description,
-                                 ModelYear = car.ModelYear
+                                 Id = p.Id,
+                                 CarName = p.Name,
+                                 BrandName = b.Name,
+                                 ColorName = c.Name,
+                                 DailyPrice = p.DailyPrice,
+                                 ModelYear = p.ModelYear
                              };
-
-                return result.ToList();
+                return filter == null ? result.ToList() : result.Where(filter).ToList();
             }
         }
     }

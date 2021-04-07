@@ -1,71 +1,106 @@
-﻿using Business.Abstract;
-using Business.BusinessAspect.Autofac;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
-using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
-using Core.Utilities.Results.Abstract;
-using Core.Utilities.Results.Concrete;
+using Core.Utilities.Business;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Entities.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace Business.Concrete
 {
     public class RentalManager : IRentalService
     {
-        IRentalDAL _rentalDAL;
-        public RentalManager(IRentalDAL rentalDAL)
+        private readonly ICarService _carService;
+        private readonly IFindeksService _findeksService;
+        private readonly IRentalDal _rentalDal;
+
+        public RentalManager(IRentalDal rentalDal, ICarService carService, IFindeksService findeksService)
         {
-            _rentalDAL = rentalDAL;
+            _carService = carService;
+            _findeksService = findeksService;
+            _rentalDal = rentalDal;
         }
 
-        [CacheRemoveAspect("IRentalService.Get")]
-        [SecuredOperation("rental.add,admin")]
+        [SecuredOperation("user,rental.get,moderator,admin")]
+        public IDataResult<Rental> GetById(int id)
+        {
+            return new SuccessDataResult<Rental>(_rentalDal.Get(r => r.Id == id));
+        }
+
+        //[SecuredOperation("user,rental.get,moderator,admin")]
+        public IDataResult<List<Rental>> GetAll()
+        {
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll());
+        }
+
+        public IDataResult<List<Rental>> GetAllByCarId(int carId)
+        {
+            return new SuccessDataResult<List<Rental>>(_rentalDal.GetAll(r => r.CarId == carId));
+        }
+
+        [SecuredOperation("user,rental.add,moderator,admin")]
         [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
         {
-            _rentalDAL.Add(rental);
-            return new SuccessResult();
+            var result = BusinessRules.Run(IsRentable(rental), CheckFindeksScoreSufficiency(rental));
+            if (result != null) return result;
+
+            _rentalDal.Add(rental);
+
+            return new SuccessResult(Messages.RentalAdded);
         }
 
-        [CacheRemoveAspect("IRentalService.Get")]
-        [SecuredOperation("rental.delete,admin")]
-        public IResult Delete(Rental rental)
-        {
-            _rentalDAL.Delete(rental);
-            return new SuccessResult();
-        }
-
-        [CacheRemoveAspect("IRentalService.Get")]
-        [SecuredOperation("rental.update,admin")]
+        [SecuredOperation("rental.update,moderator,admin")]
         [ValidationAspect(typeof(RentalValidator))]
-        public IResult Update(Rental rental)
+        public IResult Update(Rental customer)
         {
-            _rentalDAL.Update(rental);
+            _rentalDal.Update(customer);
+
+            return new SuccessResult(Messages.RentalUpdated);
+        }
+
+        [SecuredOperation("rental.delete,moderator,admin")]
+        public IResult Delete(Rental customer)
+        {
+            _rentalDal.Delete(customer);
+
+            return new SuccessResult(Messages.RentalDeleted);
+        }
+
+        public IResult CheckReturnDateByCarId(int carId)
+        {
+            var result = _rentalDal.GetAll(x => x.CarId == carId && x.ReturnDate == null);
+            if (result.Count > 0) return new ErrorResult(Messages.RentalUndeliveredCar);
+
             return new SuccessResult();
         }
 
-        [CacheAspect]
-        public IDataResult<List<Rental>> GetRentals()
+        [ValidationAspect(typeof(RentalValidator))]
+        public IResult IsRentable(Rental rental)
         {
-            return new SuccessDataResult<List<Rental>>(_rentalDAL.GetAll());
+            var result = _rentalDal.GetAll(r => r.CarId == rental.CarId);
+
+            if (result.Any(r =>
+                r.RentEndDate >= rental.RentStartDate &&
+                r.RentStartDate <= rental.RentEndDate
+            )) return new ErrorResult(Messages.RentalNotAvailable);
+
+            return new SuccessResult();
         }
 
-        [CacheAspect]
-        public IDataResult<Rental> GetById(int id)
+        public IResult CheckFindeksScoreSufficiency(Rental rental)
         {
-            return new SuccessDataResult<Rental>(_rentalDAL.Get(r => r.Id == id));
-        }
+            var car = _carService.GetById(rental.CarId).Data;
+            var findeks = _findeksService.GetByCustomerId(rental.CustomerId).Data;
 
-        [CacheAspect]
-        public IDataResult<List<RentalDetailDto>> GetRentalDetails()
-        {
-            return new SuccessDataResult<List<RentalDetailDto>>(_rentalDAL.GetRentalDetails());
+            if (findeks == null) return new ErrorResult(Messages.FindeksNotFound);
+            if (findeks.Score < car.MinFindeksScore) return new ErrorResult(Messages.FindeksNotEnoughForCar);
+
+            return new SuccessResult();
         }
     }
 }

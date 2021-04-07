@@ -1,59 +1,55 @@
-﻿using Business.Abstract;
-using Business.ValidationRules.FluentValidation;
-using Core.Aspects.Autofac.Caching;
-using Core.Aspects.Autofac.Validation;
-using Core.Utilities.Results.Abstract;
-using Core.Utilities.Results.Concrete;
+﻿using System.Collections.Generic;
+using Business.Abstract;
+using Business.BusinessAspects.Autofac;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Business.Concrete
 {
     public class CustomerManager : ICustomerService
     {
-        ICustomerDAL _customerDAL;
-        public CustomerManager(ICustomerDAL customerDAL)
+        private readonly ICustomerDal _customerDal;
+
+        public CustomerManager(ICustomerDal customerManager)
         {
-            _customerDAL = customerDAL;
+            _customerDal = customerManager;
         }
 
-        [CacheRemoveAspect("ICustomerService.Get")]
-        [ValidationAspect(typeof(CustomerValidator))]
-        public IResult Add(Customer customer)
-        {
-            _customerDAL.Add(customer);
-            return new SuccessResult();
-        }
-
-        [CacheRemoveAspect("ICustomerService.Get")]
-        [ValidationAspect(typeof(CustomerValidator))]
-        public IResult Delete(Customer customer)
-        {
-            _customerDAL.Delete(customer);
-            return new SuccessResult();
-        }
-
-        [CacheRemoveAspect("ICustomerService.Get")]
-        [ValidationAspect(typeof(CustomerValidator))]
-        public IResult Update(Customer customer)
-        {
-            _customerDAL.Update(customer);
-            return new SuccessResult();
-        }
-
-        [CacheAspect]
-        public IDataResult<List<Customer>> GetCustomers()
-        {
-            return new SuccessDataResult<List<Customer>>(_customerDAL.GetAll());
-        }
-
-        [CacheAspect]
+        [SecuredOperation("customer.get,moderator,admin")]
         public IDataResult<Customer> GetById(int id)
         {
-            return new SuccessDataResult<Customer>(_customerDAL.Get(c => c.Id == id));
+            return new SuccessDataResult<Customer>(_customerDal.Get(c => c.Id == id));
+        }
+
+        //[SecuredOperation("customer.get,moderator,admin")]
+        public IDataResult<List<Customer>> GetAll()
+        {
+            return new SuccessDataResult<List<Customer>>(_customerDal.GetAll());
+        }
+
+        public IResult Add(Customer customer)
+        {
+            _customerDal.Add(customer);
+
+            return new SuccessResult(Messages.CustomerAdded);
+        }
+
+        [SecuredOperation("customer.update,moderator,admin")]
+        public IResult Update(Customer customer)
+        {
+            _customerDal.Update(customer);
+
+            return new SuccessResult(Messages.CustomerUpdated);
+        }
+
+        [SecuredOperation("customer.delete,moderator,admin")]
+        public IResult Delete(Customer customer)
+        {
+            _customerDal.Delete(customer);
+
+            return new SuccessResult(Messages.CustomerDeleted);
         }
     }
 }

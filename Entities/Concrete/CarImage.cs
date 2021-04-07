@@ -1,8 +1,5 @@
-﻿using Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Core.Entities.Abstract;
+﻿using System;
+using Core.Entities;
 
 namespace Entities.Concrete
 {
@@ -11,6 +8,6 @@ namespace Entities.Concrete
         public int Id { get; set; }
         public int CarId { get; set; }
         public string ImagePath { get; set; }
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
     }
 }

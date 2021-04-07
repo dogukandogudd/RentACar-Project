@@ -1,23 +1,32 @@
-﻿using Core.Utilities.Results.Abstract;
+﻿using System.Collections.Generic;
+using Core.Utilities.Results;
 using Entities.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Entities.DTOs;
 
 namespace Business.Abstract
 {
     public interface ICarService
     {
-        IResult Add(Car car);
-        IResult Delete(Car car);
-        IResult Update(Car car);
-        IDataResult<List<Car>> GetAll();
         IDataResult<Car> GetById(int id);
-        IDataResult<List<Car>> GetByDailyPrice(decimal min, decimal max);
-        IDataResult<List<Car>> GetCarsByBrandId(int id);
-        IDataResult<List<Car>> GetCarsByColorId(int id);
-        IDataResult<List<CarDetailDto>> GetCarDetails();
-    }
 
+        IDataResult<List<Car>> GetAll();
+
+        IDataResult<List<CarDetailDto>> GetCarDetails();
+
+        IDataResult<List<Car>> GetCarsByBrandId(int brandId);
+
+        IDataResult<List<Car>> GetCarsByColorId(int colorId);
+
+        IDataResult<List<CarDetailDto>> GetCarDetailsByBrandName(string brandName);
+
+        IDataResult<List<CarDetailDto>> GetCarDetailsByColorName(string colorName);
+
+        IDataResult<List<CarDetailDto>> GetCarDetailsByBrandNameAndColorName(string brandName, string colorName);
+
+        IResult Add(Car car);
+
+        IResult Update(Car car);
+
+        IResult Delete(Car car);
+    }
 }
